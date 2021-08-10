@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "mctouchbar",
-	"version": "0.1.1-pre.1",
+	"version": "0.1.2-pre.1",
 
 	"name": "MCTouchBar",
 	"description": "MacBook Pro TouchBar integration for Minecraft.",
@@ -25,9 +25,9 @@
 	},
 
 	"depends": {
-		"fabricloader": ">=0.8.2",
+		"fabricloader": ">=0.11.6",
 		"fabric": "*",
-		"minecraft": "1.16.x"
+		"minecraft": "1.17.x"
 	},
 	"suggests": {
 		"flamingo": "*"
