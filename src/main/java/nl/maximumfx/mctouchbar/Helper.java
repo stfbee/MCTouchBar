@@ -5,7 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -48,7 +48,7 @@ public class Helper {
 					break;
 				}
 				final BlockEntity blockEntity6 = mcc.player.world.getBlockEntity(blockPos4);
-				final CompoundTag compoundTag2 = (blockEntity6 != null) ? blockEntity6.toTag(new CompoundTag()) : null;
+				final NbtCompound compoundTag2 = (blockEntity6 != null) ? blockEntity6.writeNbt(new NbtCompound()) : null;
 				copyBlock(blockState5, blockPos4, compoundTag2);
 				mc.debugWarn("debug.inspect.client.block");
 				break;
@@ -63,13 +63,13 @@ public class Helper {
 					break;
 				}
 				if (boolean2) {
-					mcc.player.networkHandler.getDataQueryHandler().queryEntityNbt(entity4.getEntityId(), compoundTag -> {
+					mcc.player.networkHandler.getDataQueryHandler().queryEntityNbt(entity4.getId(), compoundTag -> {
 						copyEntity(identifier5, vec3d6, compoundTag);
 						mc.debugWarn("debug.inspect.server.entity");
 					});
 					break;
 				}
-				final CompoundTag compoundTag2 = entity4.toTag(new CompoundTag());
+				final NbtCompound compoundTag2 = entity4.writeNbt(new NbtCompound());
 				copyEntity(identifier5, vec3d6, compoundTag2);
 				mc.debugWarn("debug.inspect.client.entity");
 				break;
@@ -77,7 +77,7 @@ public class Helper {
 		}
 	}
 
-	public static void copyBlock(final BlockState blockState, final BlockPos blockPos, final CompoundTag compoundTag) {
+	public static void copyBlock(final BlockState blockState, final BlockPos blockPos, final NbtCompound compoundTag) {
 		if (compoundTag != null) {
 			compoundTag.remove("x");
 			compoundTag.remove("y");
@@ -92,14 +92,14 @@ public class Helper {
 		mcc.keyboard.setClipboard(string5);
 	}
 
-	public static void copyEntity(final Identifier identifier, final Vec3d vec3d, final CompoundTag compoundTag) {
+	public static void copyEntity(final Identifier identifier, final Vec3d vec3d, final NbtCompound compoundTag) {
 		String string6;
 		if (compoundTag != null) {
 			compoundTag.remove("UUIDMost");
 			compoundTag.remove("UUIDLeast");
 			compoundTag.remove("Pos");
 			compoundTag.remove("Dimension");
-			final String string5 = compoundTag.toText().getString();
+			final String string5 = compoundTag.toString();
 			string6 = String.format(Locale.ROOT, "/summon %s %.2f %.2f %.2f %s", identifier.toString(), vec3d.x, vec3d.y, vec3d.z, string5);
 		}
 		else {

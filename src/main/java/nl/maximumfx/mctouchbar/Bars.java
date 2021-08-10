@@ -1,7 +1,6 @@
 package nl.maximumfx.mctouchbar;
 
 import com.thizzer.jtouchbar.JTouchBar;
-import com.thizzer.jtouchbar.common.Color;
 import com.thizzer.jtouchbar.common.ImagePosition;
 import com.thizzer.jtouchbar.item.PopoverTouchBarItem;
 import com.thizzer.jtouchbar.item.TouchBarItem;
@@ -11,12 +10,11 @@ import com.thizzer.jtouchbar.item.view.TouchBarTextField;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.Perspective;
-import net.minecraft.client.util.ScreenshotUtils;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.Perspective;
+import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.dimension.DimensionType;
 import org.apache.logging.log4j.Level;
 
 import java.io.IOException;
@@ -112,9 +110,9 @@ class Bars {
 		copyLocation.setAction(view -> {
 			ClientPlayerEntity p = mcc.player;
 			if (p != null) {
-				if (!mcc.player.getReducedDebugInfo()) {
+				if (!mcc.player.hasReducedDebugInfo()) {
 					mc.debugWarn("debug.copy_location.message");
-					mcc.keyboard.setClipboard(String.format(Locale.ROOT, "/execute in %s run tp @s %.2f %.2f %.2f %.2f %.2f", mcc.player.world.getDimension().toString(), mcc.player.getX(), mcc.player.getY(), mcc.player.getZ(), mcc.player.yaw, mcc.player.pitch));
+					mcc.keyboard.setClipboard(String.format(Locale.ROOT, "/execute in %s run tp @s %.2f %.2f %.2f %.2f %.2f", mcc.player.world.getDimension().toString(), mcc.player.getX(), mcc.player.getY(), mcc.player.getZ(), mcc.player.getYaw(), mcc.player.getPitch()));
 				}
 			}
 		});
@@ -185,7 +183,7 @@ class Bars {
 		Logger.log(Level.INFO, "Creating copy data button...");
 		TouchBarButton copyData = new TBButton(press).setTitle("Copy data").setIcon(Icons.F3_COPY_DATA).setImagePosition(ImagePosition.ONLY).build();
 		copyData.setAction(view -> {
-			if (mcc.player != null && !mcc.player.getReducedDebugInfo()) {
+			if (mcc.player != null && !mcc.player.hasReducedDebugInfo()) {
 				Helper.copyLookAt(mcc.player.hasPermissionLevel(2), !Screen.hasShiftDown());
 			}
 		});
@@ -289,10 +287,7 @@ class Bars {
 		//<editor-fold desc="Screenshot">
 		Logger.log(Level.INFO, "Creating screenshot button...");
 		TouchBarButton screenshot = new TBButton(press).setTitle("Screenshot").setIcon(Icons.SCREENSHOT).setImagePosition(ImagePosition.ONLY).build();
-		screenshot.setAction(view ->
-				ScreenshotUtils.saveScreenshot(mcc.runDirectory, mcc.getWindow().getFramebufferWidth(), mcc.getWindow().getFramebufferHeight(), mcc.getFramebuffer(),
-						textComponent -> mcc.execute(() -> mcc.inGameHud.getChatHud().addMessage(textComponent)))
-		);
+		screenshot.setAction(view -> ScreenshotRecorder.saveScreenshot(mcc.runDirectory, mcc.getFramebuffer(), textComponent -> mcc.execute(() -> mcc.inGameHud.getChatHud().addMessage(textComponent))));
 		buttons.put((inGame + "/screenshot"), screenshot);
 		//</editor-fold>
 		//<editor-fold desc="Debug">
