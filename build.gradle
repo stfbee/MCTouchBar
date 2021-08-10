@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.9.9'
 	id 'maven-publish'
 }
 
@@ -22,11 +22,11 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings "net.fabricmc:yarn:1.17.1+build.37:v2"
+	modImplementation "net.fabricmc:fabric-loader:0.11.6"
 
-	//modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api-0.37.2+1.17"
+	//Fabric api
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.2+1.17"
 //    deobfCompile "fi.dy.masa.malilib:malilib-${project.minecraft_version}:${project.malilib_version}:deobf"
 
     provided group: 'com.thizzer.jtouchbar', name: 'jtouchbar', version: "${project.jtouchbar_version}"
@@ -35,6 +35,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl-glfw:${project.lwjgl_version}"
     implementation "org.lwjgl:lwjgl:${project.lwjgl_version}:natives-macos"
     implementation "org.lwjgl:lwjgl-glfw:${project.lwjgl_version}:natives-macos"
+	implementation group: 'com.thizzer.jtouchbar', name: 'jtouchbar-javafx', version: '1.0.0'
 
     compile 'org.jetbrains:annotations:16.0.2'
 }

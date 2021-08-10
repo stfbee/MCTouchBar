@@ -6,7 +6,6 @@ import com.thizzer.jtouchbar.common.ImagePosition;
 import com.thizzer.jtouchbar.item.view.TouchBarButton;
 import com.thizzer.jtouchbar.item.view.TouchBarButton.ButtonType;
 import com.thizzer.jtouchbar.item.view.action.TouchBarViewAction;
-import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
