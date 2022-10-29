@@ -48,7 +48,7 @@ public class Helper {
 					break;
 				}
 				final BlockEntity blockEntity6 = mcc.player.world.getBlockEntity(blockPos4);
-				final NbtCompound compoundTag2 = (blockEntity6 != null) ? blockEntity6.writeNbt(new NbtCompound()) : null;
+				final NbtCompound compoundTag2 = (blockEntity6 != null) ? blockEntity6.createNbt() : null;
 				copyBlock(blockState5, blockPos4, compoundTag2);
 				mc.debugWarn("debug.inspect.client.block");
 				break;

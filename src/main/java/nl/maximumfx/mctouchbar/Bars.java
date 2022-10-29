@@ -13,6 +13,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.resource.Resource;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.apache.logging.log4j.Level;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 class Bars {
 
@@ -132,10 +135,10 @@ class Bars {
 		TouchBarButton cycleRenderDistance = new TBButton(cycle).setTitle("Cycle render distance").setIcon(Icons.F3_CYCLE_RENDER_DISTANCE).setImagePosition(ImagePosition.ONLY).build();
 		cycleRenderDistance.setAction(view -> {
 //			GameOption.RENDER_DISTANCE.set(mcc.options, MathHelper.clamp(mcc.options.viewDistance + (Screen.hasShiftDown() ? -1 : 1), GameOption.RENDER_DISTANCE.getMin(), GameOption.RENDER_DISTANCE.getMax()));
-			mcc.options.viewDistance = (int) MathHelper.clamp(mcc.options.viewDistance + (Screen.hasShiftDown() ? -1 : 1), 2.0f, 16.0f);
+			mcc.options.getViewDistance().setValue((int) MathHelper.clamp(mcc.options.getClampedViewDistance() + (Screen.hasShiftDown() ? -1 : 1), 2.0f, 16.0f));
 			mcc.options.write();
 			mcc.worldRenderer.scheduleTerrainUpdate();
-			mc.debugWarn("debug.cycle_renderdistance.message", mcc.options.viewDistance);
+			mc.debugWarn("debug.cycle_renderdistance.message", mcc.options.getViewDistance().getValue());
 
 		});
 		buttons.put((inGame + "/f3_cycle_render_distance"), cycleRenderDistance);
@@ -198,10 +201,10 @@ class Bars {
 					mc.debugWarn("debug.creative_spectator.error");
 				}
 				else if (mcc.player.isCreative()) {
-					mcc.player.sendChatMessage("/gamemode spectator");
+					mcc.player.sendChatMessage("/gamemode spectator", Text.of("Preview"));
 				}
 				else if (mcc.player.isSpectator() || !mcc.player.isCreative() && !mcc.player.isSpectator()) {
-					mcc.player.sendChatMessage("/gamemode creative");
+					mcc.player.sendChatMessage("/gamemode creative", Text.of("Preview"));
 				}
 			}
 		});
@@ -321,7 +324,10 @@ class Bars {
 				String file = "mctouchbar/icons/" + Icons.DISABLE_SHADERS.name().toLowerCase() + ".png";
 				try {
 					Identifier identifier = new Identifier("minecraft", file);
-					Logger.log(Level.INFO, MinecraftClient.getInstance().getResourceManager().getResource(identifier).getInputStream());
+					Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(identifier);
+					if(resource.isPresent()){
+						Logger.log(Level.INFO, ((Resource) resource.get()).getInputStream());
+					}
 				} catch (IOException e) {
 					Logger.log(Level.ERROR, "Unable to load image \"minecraft:" + file + "\"");
 					Logger.log(Level.ERROR, e);
@@ -360,13 +366,13 @@ class Bars {
 				fullScreen.setTitle("disabled");
 				fullScreen.setImage(Icons.TOGGLE_FULLSCREEN.getIcon(false));
 				mcc.getWindow().toggleFullscreen();
-				mcc.options.fullscreen = false;
+				mcc.options.getFullscreen().setValue(false);
 			}
 			else {
 				fullScreen.setTitle("enabled");
 				fullScreen.setImage(Icons.TOGGLE_FULLSCREEN.getIcon(true));
 				mcc.getWindow().toggleFullscreen();
-				mcc.options.fullscreen = true;
+				mcc.options.getFullscreen().setValue(true);
 			}
 		});
 		buttons.put((inGame + "/toggle_fullscreen"), fullScreen);

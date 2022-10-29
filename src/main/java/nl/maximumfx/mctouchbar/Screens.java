@@ -25,7 +25,7 @@ public enum Screens {
 	}
 	public static Screens getActive() {
 		if (MinecraftClient.getInstance().currentScreen != null) {
-			String title = MinecraftClient.getInstance().currentScreen.getTitle().asString();
+			String title = MinecraftClient.getInstance().currentScreen.getTitle().getString();
 			if (title == null || title.equalsIgnoreCase("")) return INGAME;
 			else return Arrays.stream(Screens.values()).filter(o -> title.equalsIgnoreCase(o.name)).findFirst().orElse(null);
 		}

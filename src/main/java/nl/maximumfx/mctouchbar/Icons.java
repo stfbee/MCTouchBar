@@ -2,6 +2,7 @@ package nl.maximumfx.mctouchbar;
 
 import com.thizzer.jtouchbar.common.Image;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public enum Icons {
 	TOGGLE_HUD(true),
@@ -38,7 +40,7 @@ public enum Icons {
 	PAUSE_STREAM,
 	TOGGLE_FULLSCREEN(true);
 
-	private boolean hasDisabled;
+	private final boolean hasDisabled;
 	Icons() {
 		this.hasDisabled = false;
 	}
@@ -103,10 +105,15 @@ public enum Icons {
 		String file = "mctouchbar/icons/" + this.name().toLowerCase() + (enabled ? "" : "_disabled") + ".png";
 		try {
 			Identifier identifier = new Identifier("minecraft", file);
-			Image img = getScaledImage(MinecraftClient.getInstance().getResourceManager().getResource(identifier).getInputStream());
+			Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(identifier);
+			if(resource.isPresent()){
+			Image img = getScaledImage(resource.get().getInputStream());
 			if (enabled) enabledIcons.put(this, img);
 			else disabledIcons.put(this, img);
 			return img;
+        } else {
+            return getDefaultIcon();
+        }
 		} catch (IOException e) {
 			Logger.log(Level.ERROR, "Unable to load image \"minecraft:" + file + "\", trying default image.");
 			return getDefaultIcon();
